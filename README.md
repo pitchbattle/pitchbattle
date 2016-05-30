@@ -1,24 +1,21 @@
-# README
+# Pitch Battle
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Getting Started
 
-Things you may want to cover:
+0. Install dependencies:
 
-* Ruby version
+        bundle
 
-* System dependencies
+0. Set up the database:
 
-* Configuration
+        rails db:create db:migrate db:seed
 
-* Database creation
+0. Make sure tests pass (everything should be green):
 
-* Database initialization
+        rspec
 
-* How to run the test suite
+0. Set up your server with [Pow](http://pow.cx):
 
-* Services (job queues, cache servers, search engines, etc.)
+        ln -s path/to/pitchbattle ~/.pow/pitchbattle
 
-* Deployment instructions
-
-* ...
+0. You can now access http://pitchbattle.dev and are ready to ship some code. :grin:
