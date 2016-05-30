@@ -1,0 +1,60 @@
+# https://circleci.com/docs/configuration#machine
+machine:
+  timezone: America/Los_Angeles
+
+  services:
+    - docker
+
+  environment:
+    RAILS_ENV: test
+    DEPLOY_TAG: ${CIRCLE_BUILD_NUM}_${CIRCLE_SHA1:0:7}
+
+# https://circleci.com/docs/configuration#dependencies
+dependencies:
+  override:
+    - docker info
+
+    - |
+      cat << VARS >> .env
+      POSTGRES_DB=$POSTGRES_DB
+      POSTGRES_USER=$POSTGRES_USER
+      VARS
+
+    - bundle install
+    - bundle exec rake assets:precompile
+    - docker-compose build
+
+# https://circleci.com/docs/configuration#database
+database:
+  pre:
+    - docker-compose up -d
+    - sleep 1
+
+  override:
+    - docker-compose run app rake db:create db:schema:load
+
+# https://circleci.com/docs/configuration#test
+test:
+  override:
+    - docker-compose run app rspec spec
+
+# https://circleci.com/docs/configuration#deployment
+deployment:
+
+  hub:
+    branch: master
+
+    commands:
+      # tag the images we built with a repository name and deploy identifier
+      - docker tag $(docker images | grep pitchbattle_app | awk '{ print $3 }') pitchbattle/pitchbattle_app:$DEPLOY_TAG
+      - docker tag $(docker images | grep pitchbattle_web | awk '{ print $3 }') pitchbattle/pitchbattle_web:$DEPLOY_TAG
+
+      # log into Docker Hub so we can push our tagged images
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+
+      # push tagged images
+      - docker push pitchbattle/pitchbattle_app:$DEPLOY_TAG
+      - docker push pitchbattle/pitchbattle_web:$DEPLOY_TAG
+
+      # run deploy script
+      - bundle exec rake docker:deploy

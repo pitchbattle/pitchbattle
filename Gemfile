@@ -12,9 +12,6 @@ gem 'turbolinks', '~> 5.x'
 gem 'jbuilder', '~> 2.0'
 gem 'bcrypt', '~> 3.1.7'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
 group :development do
   gem 'web-console'
   gem 'listen', '~> 3.0.5'
@@ -31,6 +28,8 @@ group :development, :test do
   gem 'rails-controller-testing', git: 'https://github.com/rails/rails-controller-testing'
   gem 'rspec-rails', '~> 3.5.0.beta3'
   gem 'factory_girl_rails'
+  gem 'sshkit'
+  # gem 'capistrano-rails'
 end
 
 group :test do

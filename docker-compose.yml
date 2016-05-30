@@ -1,13 +1,13 @@
 app:
   build: .
   dockerfile: .docker/pitchbattle/Dockerfile
-  env_file:
-    - .env
-    - .docker/.env
+  environment:
+    DATABASE_HOSTNAME: db
+    DATABASE_USERNAME: postgres
   links:
     - db
   expose:
-    - "3000"
+    - '3000'
   command: puma
 
 db:
@@ -21,4 +21,4 @@ web:
   links:
     - app
   ports:
-    - "80:80"
+    - '80:80'

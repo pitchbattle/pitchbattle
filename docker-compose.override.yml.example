@@ -1,0 +1,8 @@
+app:
+  env_file: .env
+  volumes:
+    - .:/var/www/pitchbattle
+
+web:
+  volumes_from:
+    - app

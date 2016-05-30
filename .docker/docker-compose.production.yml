@@ -1,0 +1,23 @@
+app:
+  image: pitchbattle/pitchbattle_app:$DEPLOY_TAG
+  env_file: .env
+  links:
+    - db
+  volumes:
+    - pitchbattle-logs:/var/www/pitchbattle/log
+  expose:
+    - '3000'
+
+db:
+  image: postgres:9.5.3
+  volumes:
+    - pitchbattle-postgres:/var/lib/postgresql/data
+
+web:
+  image: pitchbattle/pitchbattle_web:$DEPLOY_TAG
+  links:
+    - app
+  volumes_from:
+    - app
+  ports:
+    - '80:80'
